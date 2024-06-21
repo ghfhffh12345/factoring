@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Factoring Calculator</title>
+    <script>
+      let block = false;
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const button = document.querySelector("button");
+        const input = document.querySelector("input");
+
+        button.addEventListener("click", async () => {
+          if (block) return;
+
+          block = true;
+
+          button.innerText = "Factoring...";
+
+          const result = await (
+            await fetch("/api/factoring", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                value: input.value,
+              }),
+            })
+          ).text();
+
+          button.innerText = result;
+
+          block = false;
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1 class="w-full mt-40 text-4xl text-center">Enter the expression</h1>
+    <input
+      class="w-[40rem] h-10 border-2 mt-10 relative left-1/2 -translate-x-1/2"
+    />
+    <button
+      class="relative block pt-2 pb-2 pl-10 pr-10 mt-5 text-2xl font-medium text-white -translate-x-1/2 bg-blue-500 rounded-md hover:bg-blue-600 left-1/2"
+    >
+      Factoring
+    </button>
+  </body>
+</html>
