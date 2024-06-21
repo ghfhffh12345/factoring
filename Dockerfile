@@ -14,8 +14,6 @@ RUN         mkdir -p /rust/app/src && echo 'fn main(){}' > app/src/main.rs
 WORKDIR     /rust/app
 COPY static ./static
 
-EXPOSE 8080
-
 # Build & cache dependencies
 COPY        Cargo.toml Cargo.lock build.rs ./
 RUN         cargo build --release --target x86_64-unknown-linux-musl
@@ -29,4 +27,5 @@ RUN         touch src/main.rs && apt-get install musl-tools && cargo build --rel
 # Production container
 FROM        scratch
 COPY        --from=builder /rust/app/target/x86_64-unknown-linux-musl/release/factoring /app
+EXPOSE 8080
 ENTRYPOINT  ["/app"]
