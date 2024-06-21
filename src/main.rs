@@ -1,14 +1,8 @@
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder, Result};
 use factoring::*;
 use serde::Deserialize;
-use std::fs;
 
-#[macro_use]
-extern crate lazy_static;
-
-lazy_static! {
-    static ref HOME: String = fs::read_to_string("./src/index.html").unwrap();
-}
+include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
 #[derive(Debug, Deserialize)]
 struct Factoring {
@@ -17,7 +11,9 @@ struct Factoring {
 
 #[get("/")]
 async fn home() -> impl Responder {
-    HttpResponse::Ok().body((*HOME).to_string())
+    let generated = generate();
+    let content = generated.get("index.html").unwrap();
+    HttpResponse::Ok().body(content.data.to_vec())
 }
 
 async fn factoring(req_body: web::Json<Factoring>) -> Result<HttpResponse> {
@@ -36,13 +32,15 @@ async fn factoring(req_body: web::Json<Factoring>) -> Result<HttpResponse> {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    println!("Hello, world!");
+
     HttpServer::new(|| {
         App::new()
             .service(home)
             .service(web::resource("/api/factoring").route(web::post().to(factoring)))
     })
     .workers(50)
-    .bind(("localhost", 8080))?
+    .bind(("0.0.0.0", 8080))?
     .run()
     .await
 }
