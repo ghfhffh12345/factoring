@@ -1,4 +1,4 @@
-use std::{io::ErrorKind, process};
+use std::io::ErrorKind;
 
 #[derive(PartialEq, Debug, Clone)]
 pub enum Particle {
@@ -181,8 +181,7 @@ pub fn factorization(particles: &Vec<Particle>) -> Result<String, ErrorKind> {
 
     if particles.len() == 3 {
         if let Particle::Number(n) = particles.get(0).unwrap() {
-            println!("x = {}", n * -1);
-            process::exit(1);
+            return Ok(format!("x = {}", n * -1));
         }
     }
 
