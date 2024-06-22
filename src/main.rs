@@ -4,7 +4,7 @@ use serde::Deserialize;
 
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 struct Factoring {
     value: String,
 }
