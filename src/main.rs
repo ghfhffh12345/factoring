@@ -13,7 +13,7 @@ struct Factoring {
 async fn home() -> impl Responder {
     let generated = generate();
     let content = generated.get("index.html").unwrap();
-    HttpResponse::Ok().body(content.data.to_vec())
+    HttpResponse::Ok().body(content.data)
 }
 
 async fn factoring(req_body: web::Json<Factoring>) -> Result<HttpResponse> {
